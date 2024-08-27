@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            width: 80%;
+        }
+        .slider-container {
+            margin-bottom: 20px;
+        }
+        .slider-label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        #timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="slider-container">
+            <div class="slider-label">Starting Number:</div>
+            <input type="range" id="starting-number-slider" min="1" max="600" value="60" style="width:100%;" oninput="updateStartingNumber()">
+            <div id="starting-number-display">60</div>
+        </div>
+        <div class="slider-container">
+            <div class="slider-label">Interval (seconds):</div>
+            <input type="range" id="interval-slider" min="1" max="300" value="10" style="width:100%;" oninput="updateInterval()">
+            <div id="interval-display">10</div>
+        </div>
+        <button id="start-button" onclick="startTimer()">Start</button>
+        <div id="timer-display">60</div>
+        <button id="pause-resume-button" onclick="pauseResumeTimer()">Pause</button>
+    </div>
+
+    <script>
+        let timeLeft = 60;
+        let interval = 1;
+        let timer;
+        let running = false;
+
+        function updateStartingNumber() {
+            const slider = document.getElementById('starting-number-slider');
+            timeLeft = parseInt(slider.value);
+            document.getElementById('starting-number-display').textContent = slider.value;
+            document.getElementById('timer-display').textContent = slider.value;
+        }
+
+        function updateInterval() {
+            const slider = document.getElementById('interval-slider');
+            interval = parseInt(slider.value);
+            document.getElementById('interval-display').textContent = slider.value;
+        }
+
+        function startTimer() {
+            if (running) return;
+            running = true;
+            document.getElementById('pause-resume-button').textContent = "Pause";
+            runTimer();
+        }
+
+        function runTimer() {
+            if (timeLeft > 0 && running) {
+                timeLeft -= 1;
+                document.getElementById('timer-display').textContent = timeLeft;
+                timer = setTimeout(runTimer, interval * 1000);
+            } else {
+                running = false;
+            }
+        }
+
+        function pauseResumeTimer() {
+            if (running) {
+                running = false;
+                clearTimeout(timer);
+                document.getElementById('pause-resume-button').textContent = "Resume";
+            } else {
+                running = true;
+                document.getElementById('pause-resume-button').textContent = "Pause";
+                runTimer();
+            }
+        }
+    </script>
+</body>
+</html>
